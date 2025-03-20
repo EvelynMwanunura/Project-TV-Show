@@ -1,13 +1,14 @@
 #root {
   color: rgb(16, 15, 15);
   background-color: rgb(225, 217, 217);
+  align-content: center;
 }
 ul {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
   list-style-type: none;
-  padding: 0;
+  padding: 10px;
 }
 
 li {
@@ -15,15 +16,21 @@ li {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
+  text-align: center;
+  height: 400px;
+  width: 320px;
 }
 
 li h3 {
   margin: 10px 0;
   font-size: 1.2em;
   font-weight: bold;
+  border: 1px solid black;
+  border-radius: 10px;
+}
 
-  text-align: center;
+li p {
+  text-align: left;
 }
 
 li img {
