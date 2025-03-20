@@ -1,5 +1,4 @@
 //You can edit ALL of the code here
-import { getAllEpisodes } from "./episodes.js";
 
 const rootElem = document.getElementById("root");
 let ulElement = document.createElement("ul");
