@@ -22,6 +22,7 @@ function setup() {
 
 function makePageForEpisodes(episodeList) {
   rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+  rootElem.style.padding = "10px";
 }
 
 window.onload = setup;
