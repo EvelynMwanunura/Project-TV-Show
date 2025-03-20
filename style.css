@@ -1,3 +1,10 @@
+body {
+  background-color: rgb(225, 217, 217);
+
+  display: flex;
+  justify-content: center;
+}
+
 #root {
   color: rgb(16, 15, 15);
   background-color: rgb(225, 217, 217);
@@ -9,6 +16,7 @@ ul {
   gap: 30px;
   list-style-type: none;
   padding: 10px;
+  justify-content: center;
 }
 
 li {
@@ -27,6 +35,7 @@ li h3 {
   font-weight: bold;
   border: 1px solid black;
   border-radius: 10px;
+  padding: 20px;
 }
 
 li p {
@@ -36,4 +45,8 @@ li p {
 li img {
   object-fit: cover;
   border-radius: 5px;
+  display: block;
+  margin: auto;
+  max-width: 100%;
+  height: auto;
 }
