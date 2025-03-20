@@ -3,21 +3,24 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  overflow-x: hidden;
 }
 
 #root {
-  color: rgb(16, 15, 15);
-  background-color: rgb(19, 19, 19);
+  background-color: rgb(232, 232, 232);
   align-content: center;
-  max-width: 100%;
+
+  width: 95%;
+  margin: auto;
 }
 ul {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
   list-style-type: none;
   padding: 10px;
   justify-content: center;
+  max-width: 100%;
 }
 
 li {
@@ -28,6 +31,7 @@ li {
   text-align: center;
   height: 410px;
   width: 320px;
+  color: rgb(16, 15, 15);
 }
 
 li h3 {
