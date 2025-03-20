@@ -10,7 +10,7 @@ function setup() {
   makePageForEpisodes(allEpisodes);
   for (let episode of allEpisodes) {
     let liElement = document.createElement("li");
-    liElement.innerHTML = `<h3>${episode.name}</h3> <p>Season: ${episode.season}, Episode: ${episode.number}</p>
+    liElement.innerHTML = `<h3>${episode.name} - E${episode.season}S${episode.number}</h3> 
     <img src = ${episode.image.medium}> <p>${episode.summary}</p>`;
     rootElem.appendChild(ulElement);
     ulElement.appendChild(liElement);
