@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(225, 217, 217);
+  background-color: rgb(15, 15, 15);
 
   display: flex;
   justify-content: center;
@@ -7,7 +7,7 @@ body {
 
 #root {
   color: rgb(16, 15, 15);
-  background-color: rgb(225, 217, 217);
+  background-color: rgb(19, 19, 19);
   align-content: center;
 }
 ul {
