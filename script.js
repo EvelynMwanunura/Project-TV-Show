@@ -9,32 +9,30 @@ function setup() {
   const allEpisodes = getAllEpisodes();
 
   makePageForEpisodes(allEpisodes);
-
-  searchInput.addEventListener('keyup', function(){
-    allEpisodes.searchTerm = searchInput.value
-
+   
+  searchInput.addEventListener('input', function(){
+    const searchTerm = searchInput.value
     const filteredEpisodes = allEpisodes.filter(function(episode){
-      return episode.name.includes(episode.searchTerm) 
-    }
-    )
+      return episode.name.includes(searchTerm) 
+    })
+    render(filteredEpisodes)
   })
+  
+  render(allEpisodes)
 }
+  function render(episodes){
+    ulElement.innerHTML = ''
 
-  function render(){
-  allEpisodes.map((episode) => {
+  episodes.map((episode) => {
     let seasonNumber = episode.season.toString().padStart(2, "0");
     let episodeNumber = episode.number.toString().padStart(2, "0");
     let liElement = document.createElement("li");
     liElement.innerHTML = `<h3>${episode.name} - S${seasonNumber}E${episodeNumber}</h3> 
     <img src = ${episode.image.medium} alt ="episode Image"> <p>${episode.summary}</p>`;
-    
+    rootElem.appendChild(ulElement);
     ulElement.appendChild(liElement);
   });
-
-  rootElem.appendChild(ulElement);
 }
-
-render()
 
 
 function makePageForEpisodes(episodeList) {
