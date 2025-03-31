@@ -3,6 +3,7 @@
 const rootElem = document.getElementById("root");
 let ulElement = document.createElement("ul");
 let searchInput = document.getElementById("search")
+const dropDown= document.getElementById("select")
 ulElement.style.listStyle = "none";
 
 function setup() {
@@ -18,8 +19,19 @@ function setup() {
     render(filteredEpisodes)
     makePageForEpisodes(filteredEpisodes);
   })
+
+  dropDown.addEventListener("change", function(){
+    const selectedEpisodeName = dropDown.value
+    const selectedEpisode = allEpisodes.find(episode => `${episode.name} - S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}` === selectedEpisodeName)
+ 
+    if (selectedEpisode) {
+      render([selectedEpisode]);
+      makePageForEpisodes([selectedEpisode]);
+    }
+  })
   
   render(allEpisodes)
+  renderDropDown(allEpisodes)
   
 }
   function render(episodes){
@@ -34,6 +46,26 @@ function setup() {
     
     ulElement.appendChild(liElement);
   });
+}
+
+function renderDropDown(episodes){
+  dropDown.innerHTML = ''
+  episodes.forEach((episode)=>{
+    let dropDownOption = document.createElement("option")
+    let seasonNumber = episode.season.toString().padStart(2, "0");
+    let episodeNumber = episode.number.toString().padStart(2, "0");
+
+    
+    dropDownOption.value = `${episode.name} - S${seasonNumber}E${episodeNumber}`;
+    dropDownOption.textContent = `${episode.name} - S${seasonNumber}E${episodeNumber}`
+   
+
+    dropDown.appendChild(dropDownOption)
+
+  
+
+  })
+
 }
 
 
