@@ -4,10 +4,27 @@ const rootElem = document.getElementById("root");
 let ulElement = document.createElement("ul");
 let searchInput = document.getElementById("search");
 const dropDown = document.getElementById("select");
+const otherShows = document.getElementById("otherShowSelect")
 ulElement.style.listStyle = "none";
-
 let allEpisodes = [];
+let ShowData = []
 
+function fetchShows(){
+fetch(`https://api.tvmaze.com/shows`)
+
+.then((response)=>{return response.json()})
+.then((ShowData)=>ShowData)
+}
+console.log(ShowData)
+
+fetchShows(`Homeland`)
+
+
+//Function to write error
+function renderError(errorMessage){
+  rootElem.textContent = errorMessage;
+
+}
 async function fetchEpisodes() {
   try {
     rootElem.textContent = "Loading episodes...";
@@ -19,9 +36,10 @@ async function fetchEpisodes() {
     rootElem.textContent = "";
     setup();
   } catch (error) {
-    rootElem.textContent = "Error loading episodes. Please try again later.";
+    renderError("Error loading episodes. Please try again later.");
   }
 }
+
 
 function setup() {
   makePageForEpisodes(allEpisodes);
@@ -39,18 +57,24 @@ function setup() {
 
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
-    const selectedEpisode = allEpisodes.find(
+    if(selectedEpisodeName === "All Episodes"){
+      render(allEpisodes)
+      makePageForEpisodes(allEpisodes)
+    }else
+   {const selectedEpisode = allEpisodes.find(
       (episode) =>
         `${episode.name} - S${episode.season
           .toString()
           .padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}` ===
         selectedEpisodeName
+   
     );
 
     if (selectedEpisode) {
       render([selectedEpisode]);
       makePageForEpisodes([selectedEpisode]);
     }
+  }
   });
 
   render(allEpisodes);
@@ -71,7 +95,13 @@ function render(episodes) {
 }
 
 function renderDropDown(episodes) {
+  
   dropDown.innerHTML = "";
+  let allEpisodesOption = document.createElement("option");
+  allEpisodesOption.value = "All Episodes";
+  allEpisodesOption.textContent = "All Episodes";
+  allEpisodesOption.selected = true;
+  dropDown.appendChild(allEpisodesOption);
   episodes.forEach((episode) => {
     let dropDownOption = document.createElement("option");
     let seasonNumber = episode.season.toString().padStart(2, "0");
@@ -82,6 +112,7 @@ function renderDropDown(episodes) {
     dropDown.appendChild(dropDownOption);
   });
 }
+
 function makePageForEpisodes(episodeList) {
   rootElem.textContent = `Got ${episodeList.length} episode(s)`;
   rootElem.style.padding = "10px";
