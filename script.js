@@ -7,18 +7,35 @@ const dropDown = document.getElementById("select");
 const otherShows = document.getElementById("otherShowSelect")
 ulElement.style.listStyle = "none";
 let allEpisodes = [];
-let ShowData = []
+let allShows = []
+let shows = []
 
-function fetchShows(){
-fetch(`https://api.tvmaze.com/shows`)
-
-.then((response)=>{return response.json()})
-.then((ShowData)=>ShowData)
+const fetchShows = async () => {
+  try{
+    const response = await fetch("https://api.tvmaze.com/shows")
+    if(!response.ok){
+      throw new Error("Failed to fetch shows")
+    }
+    allShows = await response.json()
+    return allShows
+  } catch(err){renderError(err)
+    return []
+  }
 }
-console.log(ShowData)
+  
+const arrOfShows = async () => {
+ try{
+shows = await fetchShows()
+console.log(shows)
+} catch(error){renderError(error)}
+}
+(async () => {
+  const showsArray = await arrOfShows();
+  console.log(showsArray)
+  return showsArray
+})()
 
-fetchShows(`Homeland`)
-
+ console.log(arrOfShows())  
 
 //Function to write error
 function renderError(errorMessage){
@@ -31,6 +48,7 @@ async function fetchEpisodes() {
     const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
     if (!response.ok) {
       throw new Error("Failed to fetch episodes.");
+    
     }
     allEpisodes = await response.json();
     rootElem.textContent = "";
