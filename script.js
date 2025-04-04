@@ -4,7 +4,7 @@ const rootElem = document.getElementById("root");
 let ulElement = document.createElement("ul");
 let searchInput = document.getElementById("search");
 const dropDown = document.getElementById("select");
-const otherShows = document.getElementById("otherShowSelect")
+const showsDropdown = document.getElementById("otherShowsSelect")
 ulElement.style.listStyle = "none";
 let allEpisodes = [];
 let allShows = []
@@ -26,22 +26,26 @@ const fetchShows = async () => {
 const arrOfShows = async () => {
  try{
 shows = await fetchShows()
-console.log(shows)
+return shows
 } catch(error){renderError(error)}
 }
-(async () => {
-  const showsArray = await arrOfShows();
-  console.log(showsArray)
-  return showsArray
-})()
 
- console.log(arrOfShows())  
+const getShowsArray = async () => {
+  return await arrOfShows();
+}
+
+(async() =>{
+  const showsArray = await getShowsArray()
+  RenderShowsDropDown(showsArray)
+})();
 
 //Function to write error
 function renderError(errorMessage){
   rootElem.textContent = errorMessage;
 
 }
+
+//Fetching episodes
 async function fetchEpisodes() {
   try {
     rootElem.textContent = "Loading episodes...";
@@ -72,7 +76,7 @@ function setup() {
     render(filteredEpisodes);
     makePageForEpisodes(filteredEpisodes);
   });
-
+//episode dropdown event listener
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
     if(selectedEpisodeName === "All Episodes"){
@@ -95,9 +99,12 @@ function setup() {
   }
   });
 
+
+
   render(allEpisodes);
   renderDropDown(allEpisodes);
 }
+//rendering episodes
 function render(episodes) {
   ulElement.innerHTML = "";
 
@@ -111,10 +118,11 @@ function render(episodes) {
     ulElement.appendChild(liElement);
   });
 }
-
+//rendering dropdown for episodes
 function renderDropDown(episodes) {
   
   dropDown.innerHTML = "";
+  
   let allEpisodesOption = document.createElement("option");
   allEpisodesOption.value = "All Episodes";
   allEpisodesOption.textContent = "All Episodes";
@@ -131,6 +139,25 @@ function renderDropDown(episodes) {
   });
 }
 
+//rendering Shows in dropdown
+function RenderShowsDropDown(shows){
+  showsDropdown.innerHTML = ""
+  let defaultOption =document.createElement("option")
+  defaultOption.value = "Available Shows"
+  defaultOption.textContent = "Available Shows"
+  showsDropdown.appendChild(defaultOption)
+  shows.forEach((show)=>{
+    let dropDownOption = document.createElement("option")
+    let showName = `${show.name}`
+    
+    dropDownOption.value = `${showName}`
+    dropDownOption.textContent = `${showName}`
+    showsDropdown.appendChild(dropDownOption)
+
+  })
+}
+
+//making a page for each episode
 function makePageForEpisodes(episodeList) {
   rootElem.textContent = `Got ${episodeList.length} episode(s)`;
   rootElem.style.padding = "10px";
