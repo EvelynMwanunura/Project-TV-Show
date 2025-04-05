@@ -172,14 +172,17 @@ function RenderShowsDropDown(shows){
 showsDropdown.addEventListener("change", async()=>{
   let selectedShowId = showsDropdown.value
   //fetching episode for each show 
+  if (selectedShowId === "Available Shows"){return}
     try{
      const response = await fetch(`https://api.tvmaze.com/shows/${selectedShowId}/episodes`)
       if(!response.ok){
         throw new Error ("Failed to fetch episodes")
       }
       const episodes = await response.json()
+       rootElem.textContent = ""
+       allEpisodes = episodes
       console.log("Episodes:", episodes)
-      return episodes
+      setup()
     }catch(error){
       renderError(error)
     }
