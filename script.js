@@ -1,11 +1,14 @@
 //You can edit ALL of the code here
 
+//Dom elements
 const rootElem = document.getElementById("root");
 let ulElement = document.createElement("ul");
 let searchInput = document.getElementById("search");
 const dropDown = document.getElementById("select");
 const showsDropdown = document.getElementById("otherShowsSelect")
 ulElement.style.listStyle = "none";
+
+//Global Variables
 let allEpisodes = [];
 let allShows = []
 let shows = []
@@ -139,6 +142,13 @@ function renderDropDown(episodes) {
   });
 }
 
+//making a page for each episode
+function makePageForEpisodes(episodeList) {
+  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+  rootElem.style.padding = "10px";
+  rootElem.appendChild(ulElement);
+}
+
 //rendering Shows in dropdown
 function RenderShowsDropDown(shows){
   showsDropdown.innerHTML = ""
@@ -149,19 +159,31 @@ function RenderShowsDropDown(shows){
   shows.forEach((show)=>{
     let dropDownOption = document.createElement("option")
     let showName = `${show.name}`
-    
-    dropDownOption.value = `${showName}`
+    let showId = `${show.id}`
+
+    dropDownOption.value = `${showId}`
     dropDownOption.textContent = `${showName}`
     showsDropdown.appendChild(dropDownOption)
 
   })
 }
 
-//making a page for each episode
-function makePageForEpisodes(episodeList) {
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
-  rootElem.style.padding = "10px";
-  rootElem.appendChild(ulElement);
-}
+//eventlistener for shows
+showsDropdown.addEventListener("change", async()=>{
+  let selectedShowId = showsDropdown.value
+  //fetching episode for each show 
+    try{
+     const response = await fetch(`https://api.tvmaze.com/shows/${selectedShowId}/episodes`)
+      if(!response.ok){
+        throw new Error ("Failed to fetch episodes")
+      }
+      const episodes = await response.json()
+      console.log("Episodes:", episodes)
+      return episodes
+    }catch(error){
+      renderError(error)
+    }
+    
+})
 
 window.onload = fetchEpisodes;
