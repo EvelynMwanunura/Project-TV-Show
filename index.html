@@ -16,18 +16,19 @@
 
   <body>
     <div>
+      <div id="select-container">
+        <label for="otherShowsSelect">
+          <select id="otherShowsSelect"></select>
+        </label>
       <label for="search">
-      <input type="search" id="search" placeholder="Search">
-    </label>
-    <label for="select">
-      <select id="select"></select>
-    </label>
-    <div id="root"></div>
+        <label for="select">
+          <select id="select"></select>
+        </label>
+        <input type="search" id="search" placeholder="Search" />
+      </label>
     </div>
-    
-
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+      <div id="root"></div>
+    </div>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
