@@ -151,6 +151,9 @@ function makePageForEpisodes(episodeList) {
 
 //rendering Shows in dropdown
 function RenderShowsDropDown(shows){
+  shows
+  .sort((a, b) => a.name.localeCompare(b.name))
+
   showsDropdown.innerHTML = ""
   let defaultOption =document.createElement("option")
   defaultOption.value = "Available Shows"
