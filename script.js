@@ -115,9 +115,7 @@ function setup() {
     return;
   }
   makePageForEpisodes(allEpisodes);
-<<<<<<< HEAD
-  //event listener for dropdown for the episodes
-=======
+
 
   searchInput.addEventListener("input", function () {
     const searchTerm = searchInput.value.toLowerCase();
@@ -131,7 +129,7 @@ function setup() {
     makePageForEpisodes(filteredEpisodes);
   });
 //episode dropdown event listener
->>>>>>> 4383a21 (edited the search filter to search for shows)
+
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
     if (selectedEpisodeName === "All Episodes") {
