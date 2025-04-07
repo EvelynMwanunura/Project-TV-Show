@@ -69,6 +69,7 @@ searchInput.addEventListener("input", function () {
         (show.summary && show.summary.toLowerCase().includes(searchTerm)) ||
         show.genres.join(", ").toLowerCase().includes(searchTerm)
     );
+    RenderShowsDropDown(filteredShows);
     renderAllShows(filteredShows);
   }
 });
@@ -117,14 +118,12 @@ function setup() {
             .toString()
             .padStart(2, "0")}` === selectedEpisodeName
       );
-
       if (selectedEpisode) {
         render([selectedEpisode]);
         makePageForEpisodes([selectedEpisode]);
       }
     }
   });
-
   render(allEpisodes);
   renderDropDown(allEpisodes);
 }
@@ -132,7 +131,6 @@ function setup() {
 // Function to render episodes
 function render(episodes) {
   ulElement.innerHTML = "";
-
   episodes.forEach((episode) => {
     let seasonNumber = episode.season.toString().padStart(2, "0");
     let episodeNumber = episode.number.toString().padStart(2, "0");
@@ -141,7 +139,6 @@ function render(episodes) {
       <h3>${episode.name} - S${seasonNumber}E${episodeNumber}</h3> 
       <img src="${episode.image.medium}" alt="episode Image"> 
       <p>${episode.summary}</p>`;
-
     ulElement.appendChild(liElement);
   });
 }
@@ -149,18 +146,15 @@ function render(episodes) {
 // Rendering episodes dropdown
 function renderDropDown(episodes) {
   dropDown.innerHTML = "";
-
   let allEpisodesOption = document.createElement("option");
   allEpisodesOption.value = "All Episodes";
   allEpisodesOption.textContent = "All Episodes";
   allEpisodesOption.selected = true;
   dropDown.appendChild(allEpisodesOption);
-
   episodes.forEach((episode) => {
     let dropDownOption = document.createElement("option");
     let seasonNumber = episode.season.toString().padStart(2, "0");
     let episodeNumber = episode.number.toString().padStart(2, "0");
-
     dropDownOption.value = `${episode.name} - S${seasonNumber}E${episodeNumber}`;
     dropDownOption.textContent = `${episode.name} - S${seasonNumber}E${episodeNumber}`;
     dropDown.appendChild(dropDownOption);
@@ -173,7 +167,6 @@ function makePageForEpisodes(episodeList) {
   rootElem.style.padding = "10px";
   rootElem.appendChild(ulElement);
 }
-
 // function to render all shows
 function renderAllShows(show) {
   rootElem.innerHTML = "";
@@ -184,17 +177,14 @@ function renderAllShows(show) {
   showCount.style.padding = "10px";
   showCount.style.fontWeight = "bold";
   rootElem.appendChild(showCount);
-
   let showsList = document.createElement("div");
   showsList.classList.add("showListContainer");
 
   show.forEach((show) => {
     const showCard = document.createElement("div");
     showCard.classList.add("showCard");
-
     const imageUrl =
       show.image?.medium || "https://via.placeholder.com/210x295?text=No+Image";
-
     showCard.innerHTML = `
       <img src="${imageUrl}" alt="${
       show.name
@@ -216,18 +206,15 @@ function renderAllShows(show) {
 // Rendering Shows in dropdown
 function RenderShowsDropDown(shows) {
   shows.sort((a, b) => a.name.localeCompare(b.name));
-
   showsDropdown.innerHTML = "";
   let defaultOption = document.createElement("option");
   defaultOption.value = "Available Shows";
   defaultOption.textContent = "Available Shows";
   showsDropdown.appendChild(defaultOption);
-
   shows.forEach((show) => {
     let dropDownOption = document.createElement("option");
     let showName = `${show.name}`;
     let showId = `${show.id}`;
-
     dropDownOption.value = `${showId}`;
     dropDownOption.textContent = `${showName}`;
     showsDropdown.appendChild(dropDownOption);
