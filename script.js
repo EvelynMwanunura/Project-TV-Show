@@ -168,7 +168,6 @@ function renderAllShows(show) {
 
 //rendering dropdown for episodes
 function renderDropDown(episodes) {
-  
   dropDown.innerHTML = "";
   
   let allEpisodesOption = document.createElement("option");
@@ -195,46 +194,49 @@ function makePageForEpisodes(episodeList) {
 }
 
 //rendering Shows in dropdown
-function RenderShowsDropDown(shows){
-  shows
-  .sort((a, b) => a.name.localeCompare(b.name))
+function RenderShowsDropDown(shows) {
+  shows.sort((a, b) => a.name.localeCompare(b.name));
 
-  showsDropdown.innerHTML = ""
-  let defaultOption =document.createElement("option")
-  defaultOption.value = "Available Shows"
-  defaultOption.textContent = "Available Shows"
-  showsDropdown.appendChild(defaultOption)
-  shows.forEach((show)=>{
-    let dropDownOption = document.createElement("option")
-    let showName = `${show.name}`
-    let showId = `${show.id}`
+  showsDropdown.innerHTML = "";
+  let defaultOption = document.createElement("option");
+  defaultOption.value = "Available Shows";
+  defaultOption.textContent = "Available Shows";
+  showsDropdown.appendChild(defaultOption);
+  shows.forEach((show) => {
+    let dropDownOption = document.createElement("option");
+    let showName = `${show.name}`;
+    let showId = `${show.id}`;
 
-    dropDownOption.value = `${showId}`
-    dropDownOption.textContent = `${showName}`
-    showsDropdown.appendChild(dropDownOption)
-
-  })
+    dropDownOption.value = `${showId}`;
+    dropDownOption.textContent = `${showName}`;
+    showsDropdown.appendChild(dropDownOption);
+  });
 }
 
 //eventlistener for shows
-showsDropdown.addEventListener("change", async()=>{
-  let selectedShowId = showsDropdown.value
+showsDropdown.addEventListener("change", async () => {
+  let selectedShowId = showsDropdown.value;
   //fetching episode for each show 
-  if (selectedShowId === "Available Shows"){return}
-    try{
-     const response = await fetch(`https://api.tvmaze.com/shows/${selectedShowId}/episodes`)
-      if(!response.ok){
-        throw new Error ("Failed to fetch episodes")
+  if (selectedShowId === "Available Shows") {
+    rootElem.textContent = "";
+    renderAllShows(allShows);
+    //countShows(allShows);
+    return;
+  }
+  try {
+    const response = await fetch(
+      `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch episodes");
       }
-      const episodes = await response.json()
-       rootElem.textContent = ""
-       allEpisodes = episodes
-      console.log("Episodes:", episodes)
-      setup()
-    }catch(error){
-      renderError(error)
-    }
-    
-})
+    const episodes = await response.json();
+    rootElem.textContent = "";
+    allEpisodes = episodes;
 
-window.onload = fetchEpisodes;
+    setup();
+  } catch (error) {
+    renderError(error);
+    }
+});
+window.onload = setup;
