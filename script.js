@@ -44,6 +44,7 @@ const getShowsArray = async () => {
 (async () => {
   const showsArray = await getShowsArray();
   allShows = showsArray;
+  shows = showsArray;
   RenderShowsDropDown(showsArray);
   renderAllShows(showsArray);
 })();
@@ -103,17 +104,6 @@ function setup() {
   }
   makePageForEpisodes(allEpisodes);
 
-  searchInput.addEventListener("input", function () {
-    const searchTerm = searchInput.value.toLowerCase();
-
-    const filterShows = shows.filter(
-      (show) =>
-        show.name.toLowerCase().includes(searchTerm) ||
-        (show.summary && show.summary.toLowerCase().includes(searchTerm))
-    );
-    render(filteredEpisodes);
-    makePageForEpisodes(filteredEpisodes);
-  });
   //episode dropdown event listener
 
   dropDown.addEventListener("change", function () {
