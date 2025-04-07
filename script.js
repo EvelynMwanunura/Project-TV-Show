@@ -25,26 +25,13 @@ const fetchShows = async () => {
     return [];
   }
 };
-<<<<<<< HEAD
-=======
-  
 const arrOfShows = async () => {
   try {
-    shows = await fetchShows();
+    const shows = await fetchShows(); // use const
     return shows;
   } catch (error) {
     renderError(error);
-  }
-};
->>>>>>> 4383a21 (edited the search filter to search for shows)
-
-// Function to call fetchShows, when successful the function returns  shows array, and displays error if not successful
-const arrOfShows = async () => {
-  try {
-    shows = await fetchShows();
-    return shows;
-  } catch (error) {
-    renderError(error);
+    return [];
   }
 };
 
@@ -116,7 +103,6 @@ function setup() {
   }
   makePageForEpisodes(allEpisodes);
 
-
   searchInput.addEventListener("input", function () {
     const searchTerm = searchInput.value.toLowerCase();
 
@@ -128,7 +114,7 @@ function setup() {
     render(filteredEpisodes);
     makePageForEpisodes(filteredEpisodes);
   });
-//episode dropdown event listener
+  //episode dropdown event listener
 
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
