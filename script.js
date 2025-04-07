@@ -80,17 +80,20 @@ function setup() {
         show.name.toLowerCase().includes(searchTerm) ||
         (show.summary && show.summary.toLowerCase().includes(searchTerm))
     );
-    render(filteredEpisodes);
-    makePageForEpisodes(filteredEpisodes);
+    rootElem.innerHTML = "";
+    renderAllShows(filterShows);
+
+    render(filterShows);
+    makePageForEpisodes(filterShows);
   });
 //episode dropdown event listener
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
-    if(selectedEpisodeName === "All Episodes"){
-      render(allEpisodes)
-      makePageForEpisodes(allEpisodes)
-    }else
-   {const selectedEpisode = allEpisodes.find(
+    if (selectedEpisodeName === "All Episodes") {
+      render(allEpisodes);
+      makePageForEpisodes(allEpisodes);
+    } else {
+      const selectedEpisode = allEpisodes.find(
       (episode) =>
         `${episode.name} - S${episode.season
           .toString()
@@ -125,6 +128,44 @@ function render(episodes) {
     ulElement.appendChild(liElement);
   });
 }
+
+function renderAllShows(show) {
+  rootElem.innerHTML = "";
+
+  // Show count paragraph
+  const showCount = document.createElement("p");
+  showCount.textContent = `Got ${show.length} show(s)`;
+  showCount.style.padding = "10px";
+  showCount.style.fontWeight = "bold";
+  rootElem.appendChild(showCount);
+
+  let showsList = document.createElement("div");
+  showsList.classList.add("showListContainer");
+
+  show.forEach((show) => {
+    const showCard = document.createElement("div");
+    showCard.classList.add("showCard");
+
+    const imageUrl =
+      show.image?.medium || "https://via.placeholder.com/210x295?text=No+Image";
+
+    showCard.innerHTML = `
+      <img src="${imageUrl}" alt="${show.name}" style="width: 210px; height: auto; border-radius: 5px;" />
+      <div>
+        <h3>${show.name}</h3>
+        <p>${show.summary}</p>
+        <p><strong>Status:</strong> ${show.status}</p>
+        <p><strong>Rating:</strong> ${show.rating.average}</p>
+        <p><strong>Runtime:</strong> ${show.runtime} mins</p>
+      </div>
+    `;
+
+    showsList.appendChild(showCard);
+  });
+
+  rootElem.appendChild(showsList);
+}
+
 //rendering dropdown for episodes
 function renderDropDown(episodes) {
   
