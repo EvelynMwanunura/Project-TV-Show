@@ -5,37 +5,40 @@ const rootElem = document.getElementById("root");
 let ulElement = document.createElement("ul");
 let searchInput = document.getElementById("search");
 const dropDown = document.getElementById("select");
-const showsDropdown = document.getElementById("otherShowsSelect")
+const showsDropdown = document.getElementById("otherShowsSelect");
 ulElement.style.listStyle = "none";
 
 //Global Variables
 let allEpisodes = [];
-let allShows = []
-let shows = []
+let allShows = [];
+let shows = [];
 
 const fetchShows = async () => {
-  try{
-    const response = await fetch("https://api.tvmaze.com/shows")
-    if(!response.ok){
-      throw new Error("Failed to fetch shows")
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows");
+    if (!response.ok) {
+      throw new Error("Failed to fetch shows");
     }
-    allShows = await response.json()
-    return allShows
-  } catch(err){renderError(err)
-    return []
+    allShows = await response.json();
+    return allShows;
+  } catch (err) {
+    renderError(err);
+    return [];
   }
-}
+};
   
 const arrOfShows = async () => {
- try{
-shows = await fetchShows()
-return shows
-} catch(error){renderError(error)}
-}
+  try {
+    shows = await fetchShows();
+    return shows;
+  } catch (error) {
+    renderError(error);
+  }
+};
 
 const getShowsArray = async () => {
   return await arrOfShows();
-}
+};
 
 (async() =>{
   const showsArray = await getShowsArray()
@@ -71,10 +74,11 @@ function setup() {
 
   searchInput.addEventListener("input", function () {
     const searchTerm = searchInput.value.toLowerCase();
-    const filteredEpisodes = allEpisodes.filter(
-      (episode) =>
-        episode.name.toLowerCase().includes(searchTerm) ||
-        episode.summary.toLowerCase().includes(searchTerm)
+
+    const filterShows = shows.filter(
+      (show) =>
+        show.name.toLowerCase().includes(searchTerm) ||
+        (show.summary && show.summary.toLowerCase().includes(searchTerm))
     );
     render(filteredEpisodes);
     makePageForEpisodes(filteredEpisodes);
