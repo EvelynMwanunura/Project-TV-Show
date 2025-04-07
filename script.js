@@ -42,8 +42,34 @@ const getShowsArray = async () => {
 
 (async () => {
   const showsArray = await getShowsArray();
+  allShows = showsArray;
+
   RenderShowsDropDown(showsArray);
+  renderAllShows(showsArray);
 })();
+
+searchInput.addEventListener("input", function () {
+  const searchTerm = searchInput.value.toLowerCase();
+  rootElem.innerHTML = "";
+
+  if (allEpisodes.length) {
+    const filteredEpisodes = allEpisodes.filter(
+      (episode) =>
+        episode.name.toLowerCase().includes(searchTerm) ||
+        (episode.summary && episode.summary.toLowerCase().includes(searchTerm))
+    );
+    render(filteredEpisodes);
+    makePageForEpisodes(filteredEpisodes);
+  } else {
+    const filteredShows = shows.filter(
+      (show) =>
+        show.name.toLowerCase().includes(searchTerm) ||
+        (show.summary && show.summary.toLowerCase().includes(searchTerm)) ||
+        show.genres.join(", ").toLowerCase().includes(searchTerm)
+    );
+    renderAllShows(filteredShows);
+  }
+});
 
 //Function to write error
 function renderError(errorMessage) {
@@ -67,9 +93,13 @@ async function fetchEpisodes() {
 }
 
 function setup() {
+  if (!allEpisodes.length) {
+    renderAllShows(allShows);
+    return;
+  }
   makePageForEpisodes(allEpisodes);
 
-  searchInput.addEventListener("input", function () {
+  /*searchInput.addEventListener("input", function () {
     const searchTerm = searchInput.value.toLowerCase();
 
     const filterShows = shows.filter(
@@ -82,7 +112,7 @@ function setup() {
 
     render(filterShows);
     makePageForEpisodes(filterShows);
-  });
+  });*/
   //episode dropdown event listener
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
@@ -145,13 +175,16 @@ function renderAllShows(show) {
       show.image?.medium || "https://via.placeholder.com/210x295?text=No+Image";
 
     showCard.innerHTML = `
-      <img src="${imageUrl}" alt="${show.name}" style="width: 210px; height: auto; border-radius: 5px;" />
+      <img src="${imageUrl}" alt="${
+      show.name
+    }" style="width: 210px; height: auto; border-radius: 5px;" />
       <div>
         <h3>${show.name}</h3>
         <p>${show.summary}</p>
         <p><strong>Status:</strong> ${show.status}</p>
         <p><strong>Rating:</strong> ${show.rating.average}</p>
         <p><strong>Runtime:</strong> ${show.runtime} mins</p>
+        <p><strong>Genres:</strong> ${show.genres.join(", ")}</p>
       </div>
     `;
 
@@ -213,9 +246,11 @@ showsDropdown.addEventListener("change", async () => {
   let selectedShowId = showsDropdown.value;
   //fetching episode for each show
   if (selectedShowId === "Available Shows") {
+    allEpisodes = [];
     rootElem.textContent = "";
     renderAllShows(allShows);
     //countShows(allShows);
+    dropDown.style.display = "none";
     return;
   }
   try {
@@ -230,6 +265,7 @@ showsDropdown.addEventListener("change", async () => {
     allEpisodes = episodes;
 
     setup();
+    dropDown.style.display = "inline-block";
   } catch (error) {
     renderError(error);
   }
