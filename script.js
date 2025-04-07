@@ -26,7 +26,7 @@ const fetchShows = async () => {
     return [];
   }
 };
-  
+
 const arrOfShows = async () => {
   try {
     shows = await fetchShows();
@@ -40,15 +40,14 @@ const getShowsArray = async () => {
   return await arrOfShows();
 };
 
-(async() =>{
-  const showsArray = await getShowsArray()
-  RenderShowsDropDown(showsArray)
+(async () => {
+  const showsArray = await getShowsArray();
+  RenderShowsDropDown(showsArray);
 })();
 
 //Function to write error
-function renderError(errorMessage){
+function renderError(errorMessage) {
   rootElem.textContent = errorMessage;
-
 }
 
 //Fetching episodes
@@ -58,7 +57,6 @@ async function fetchEpisodes() {
     const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
     if (!response.ok) {
       throw new Error("Failed to fetch episodes.");
-    
     }
     allEpisodes = await response.json();
     rootElem.textContent = "";
@@ -67,7 +65,6 @@ async function fetchEpisodes() {
     renderError("Error loading episodes. Please try again later.");
   }
 }
-
 
 function setup() {
   makePageForEpisodes(allEpisodes);
@@ -86,7 +83,7 @@ function setup() {
     render(filterShows);
     makePageForEpisodes(filterShows);
   });
-//episode dropdown event listener
+  //episode dropdown event listener
   dropDown.addEventListener("change", function () {
     const selectedEpisodeName = dropDown.value;
     if (selectedEpisodeName === "All Episodes") {
@@ -94,22 +91,20 @@ function setup() {
       makePageForEpisodes(allEpisodes);
     } else {
       const selectedEpisode = allEpisodes.find(
-      (episode) =>
-        `${episode.name} - S${episode.season
-          .toString()
-          .padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}` ===
-        selectedEpisodeName
-   
-    );
+        (episode) =>
+          `${episode.name} - S${episode.season
+            .toString()
+            .padStart(2, "0")}E${episode.number
+            .toString()
+            .padStart(2, "0")}` === selectedEpisodeName
+      );
 
-    if (selectedEpisode) {
-      render([selectedEpisode]);
-      makePageForEpisodes([selectedEpisode]);
+      if (selectedEpisode) {
+        render([selectedEpisode]);
+        makePageForEpisodes([selectedEpisode]);
+      }
     }
-  }
   });
-
-
 
   render(allEpisodes);
   renderDropDown(allEpisodes);
@@ -169,7 +164,7 @@ function renderAllShows(show) {
 //rendering dropdown for episodes
 function renderDropDown(episodes) {
   dropDown.innerHTML = "";
-  
+
   let allEpisodesOption = document.createElement("option");
   allEpisodesOption.value = "All Episodes";
   allEpisodesOption.textContent = "All Episodes";
@@ -216,7 +211,7 @@ function RenderShowsDropDown(shows) {
 //eventlistener for shows
 showsDropdown.addEventListener("change", async () => {
   let selectedShowId = showsDropdown.value;
-  //fetching episode for each show 
+  //fetching episode for each show
   if (selectedShowId === "Available Shows") {
     rootElem.textContent = "";
     renderAllShows(allShows);
@@ -229,7 +224,7 @@ showsDropdown.addEventListener("change", async () => {
     );
     if (!response.ok) {
       throw new Error("Failed to fetch episodes");
-      }
+    }
     const episodes = await response.json();
     rootElem.textContent = "";
     allEpisodes = episodes;
@@ -237,6 +232,6 @@ showsDropdown.addEventListener("change", async () => {
     setup();
   } catch (error) {
     renderError(error);
-    }
+  }
 });
 window.onload = setup;
