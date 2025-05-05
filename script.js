@@ -25,24 +25,10 @@ const fetchShows = async () => {
     return [];
   }
 };
-const arrOfShows = async () => {
-  try {
-    const shows = await fetchShows(); // use const
-    return shows;
-  } catch (error) {
-    renderError(error);
-    return [];
-  }
-};
-
-// Function to get shows array
-const getShowsArray = async () => {
-  return await arrOfShows();
-};
 
 // Self-invoking function to fetch and render shows
 (async () => {
-  const showsArray = await getShowsArray();
+  const showsArray = await fetchShows();
   allShows = showsArray;
   shows = showsArray;
   RenderShowsDropDown(showsArray);
