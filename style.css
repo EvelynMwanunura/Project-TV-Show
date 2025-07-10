@@ -57,15 +57,6 @@ li img {
   height: auto;
 }
 
-#search {
-  padding: 10px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  border-radius: 5px;
-  border: 4px solid rgb(5, 5, 5);
-  font-size: 16px;
-}
-
 #select-container {
   display: flex;
   align-items: center;
@@ -75,24 +66,6 @@ li img {
 #select-container label,
 #select-container input {
   margin: 0;
-}
-
-#otherShowsSelect {
-  padding: 10px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  border-radius: 5px;
-  border: 4px solid rgb(5, 5, 5);
-  font-size: 16px;
-}
-
-#select {
-  padding: 10px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  border-radius: 5px;
-  border: 4px solid #ccc;
-  font-size: 16px;
 }
 
 .showName {
@@ -169,4 +142,86 @@ li img {
 .showMoreBtn:hover {
   background-color: rgb(243, 41, 182);
   transform: scale(1.1);
+}
+
+#genre {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: rgb(5, 5, 5);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+#genre:hover,
+#genre:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+#rating {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: rgb(5, 5, 5);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  color: white;
+}
+
+#rating:hover,
+#rating:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+#select {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: rgb(228, 99, 157);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  color: white;
+}
+
+#select:hover,
+#select:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+#otherShowsSelect {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: rgb(5, 5, 5);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+#otherShowsSelect:hover,
+#otherShowsSelect:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+#search {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: rgb(5, 5, 5);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+#search:hover,
+#search:focus {
+  border-color: #0077cc;
+  outline: none;
 }

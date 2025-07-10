@@ -32,6 +32,8 @@ const fetchShows = async () => {
   const showsArray = await fetchShows();
   RenderShowsDropDown(showsArray);
   renderAllShows(showsArray);
+  renderRatingDropdown(showsArray);
+  renderGenreDropdown(showsArray);
 })();
 
 // this is just a function to show error
@@ -238,6 +240,86 @@ showsDropdown.addEventListener("change", async () => {
     renderError(error);
   }
 });
+
+function renderRatingDropdown(shows) {
+  const ratingDropdown = document.getElementById("rating");
+  ratingDropdown.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Rating";
+  ratingDropdown.appendChild(defaultOption);
+
+  // Get unique ratings and sort them
+  const uniqueRatings = [
+    ...new Set(
+      shows
+        .map((show) => show.rating.average)
+        .filter((rating) => rating !== null)
+        .sort((a, b) => b - a)
+    ),
+  ];
+
+  uniqueRatings.forEach((rating) => {
+    const option = document.createElement("option");
+    option.value = rating;
+    option.textContent = rating;
+    ratingDropdown.appendChild(option);
+  });
+
+  // Event listener for dropdown filter
+  ratingDropdown.addEventListener("change", () => {
+    const selectedRating = parseFloat(ratingDropdown.value);
+
+    if (!selectedRating) {
+      renderAllShows(shows); // Reset to show all
+    } else {
+      const filtered = shows.filter(
+        (show) => show.rating.average === selectedRating
+      );
+      renderAllShows(filtered);
+    }
+  });
+}
+
+//Filter by Genre
+
+function renderGenreDropdown(shows) {
+  const genreDropdown = document.getElementById("genre");
+  genreDropdown.innerHTML = "";
+
+  // Create default option
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Genre";
+  genreDropdown.appendChild(defaultOption);
+
+  // Collect all genres into a single array
+  const allGenres = shows.flatMap((show) => show.genres || []);
+  const uniqueGenres = [...new Set(allGenres)].sort();
+
+  // Populate dropdown with unique genres
+  uniqueGenres.forEach((genre) => {
+    const option = document.createElement("option");
+    option.value = genre;
+    option.textContent = genre;
+    genreDropdown.appendChild(option);
+  });
+
+  // Event listener to filter shows by selected genre
+  genreDropdown.addEventListener("change", () => {
+    const selectedGenre = genreDropdown.value;
+
+    if (!selectedGenre) {
+      renderAllShows(shows); // Show all if no genre selected
+    } else {
+      const filteredShows = shows.filter((show) =>
+        show.genres.includes(selectedGenre)
+      );
+      renderAllShows(filteredShows);
+    }
+  });
+}
 
 // Window onload setup
 window.onload = setup;
