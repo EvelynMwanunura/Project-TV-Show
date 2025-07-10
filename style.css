@@ -60,12 +60,11 @@ li img {
 #select-container {
   display: flex;
   align-items: center;
+  justify-content: center; /* Center content horizontally */
+  flex-wrap: wrap;
   gap: 10px;
-}
-
-#select-container label,
-#select-container input {
-  margin: 0;
+  margin: 20px auto; /* Centers the container itself */
+  width: 100%;
 }
 
 .showName {
@@ -145,7 +144,7 @@ li img {
 }
 
 #genre {
-  padding: 10px 15px;
+  padding: 20px 15px;
   font-size: 16px;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -153,6 +152,7 @@ li img {
   cursor: pointer;
   transition: border-color 0.3s ease;
   color: white;
+  width: 200px;
 }
 
 #genre:hover,
@@ -162,7 +162,7 @@ li img {
 }
 
 #rating {
-  padding: 10px 15px;
+  padding: 20px 15px;
   font-size: 16px;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -170,6 +170,7 @@ li img {
   cursor: pointer;
   transition: border-color 0.3s ease;
   color: white;
+  width: 200px;
 }
 
 #rating:hover,
@@ -179,7 +180,7 @@ li img {
 }
 
 #select {
-  padding: 10px 15px;
+  padding: 20px 15px;
   font-size: 16px;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -196,7 +197,7 @@ li img {
 }
 
 #otherShowsSelect {
-  padding: 10px 15px;
+  padding: 20px 15px;
   font-size: 16px;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -213,14 +214,15 @@ li img {
 }
 
 #search {
-  padding: 10px 15px;
+  padding: 20px 15px;
   font-size: 16px;
   border: 2px solid #ccc;
-  border-radius: 8px;
+  border-radius: 20px;
   background-color: rgb(5, 5, 5);
   cursor: pointer;
   transition: border-color 0.3s ease;
   color: white;
+  width: 500px;
 }
 
 #search:hover,
