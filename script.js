@@ -90,6 +90,11 @@ function renderAllShows(show) {
         </div>
       </div>
     `;
+    const showMoreBtn = showCard.querySelector(".showMoreBtn");
+    showMoreBtn.addEventListener("click", () => {
+      localStorage.setItem("selectedShow", JSON.stringify(show));
+      window.location.href = "details.html";
+    });
 
     showsList.appendChild(showCard);
   });
@@ -315,6 +320,48 @@ function renderGenreDropdown(shows) {
     }
   });
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("detailsContainer");
+  const showData = localStorage.getItem("selectedShow");
+
+  if (!showData) {
+    window.location.href = "index.html"; // auto-redirect if no data
+    return;
+  }
+
+  const show = JSON.parse(showData);
+  const imageUrl =
+    show.image?.original ?? "https://via.placeholder.com/300x450?text=No+Image";
+
+  container.innerHTML = `
+    <div class="showDetailsPage" style="padding: 20px; color: white; max-width: 800px; margin: auto;">
+      <h2>${show.name}</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <img src="${imageUrl}" alt="${
+    show.name
+  }" style="max-width: 300px; border-radius: 10px;" />
+        <div style="flex: 1;">
+          <p><strong>Language:</strong> ${show.language}</p>
+          <p><strong>Genres:</strong> ${show.genres.join(", ")}</p>
+          <p><strong>Status:</strong> ${show.status}</p>
+          <p><strong>Runtime:</strong> ${show.runtime} mins</p>
+          <p><strong>Rating:</strong> ${show.rating.average ?? "N/A"}</p>
+          <p><strong>Premiered:</strong> ${show.premiered}</p>
+          <p><strong>Official Site:</strong> <a href="${
+            show.officialSite
+          }" target="_blank" style="color: lightblue;">Visit Site</a></p>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <h3>Summary</h3>
+        <div>${show.summary}</div>
+      </div>
+      <div style="margin-top: 20px;">
+        <button onclick="window.history.back()" style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">← Back to All Shows</button>
+      </div>
+    </div>
+  `;
+});
 
 // Window onload setup
 window.onload = setup;
