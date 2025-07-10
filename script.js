@@ -278,6 +278,8 @@ function renderRatingDropdown(shows) {
         (show) => show.rating.average === selectedRating
       );
       renderAllShows(filtered);
+      renderGenreDropdown(filtered);
+      renderDropDown(filtered);
     }
   });
 }
@@ -317,6 +319,8 @@ function renderGenreDropdown(shows) {
         show.genres.includes(selectedGenre)
       );
       renderAllShows(filteredShows);
+      renderDropDown(filteredShows);
+      renderRatingDropdown(filteredShows);
     }
   });
 }
