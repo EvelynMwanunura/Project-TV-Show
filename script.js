@@ -30,6 +30,7 @@ const fetchShows = async () => {
 // Self-invoking function to fetch and render shows
 (async () => {
   const showsArray = await fetchShows();
+  shows = showsArray; // Add this line
   RenderShowsDropDown(showsArray);
   renderAllShows(showsArray);
   renderRatingDropdown(showsArray);
@@ -151,24 +152,18 @@ searchInput.addEventListener("input", function () {
   const searchTerm = searchInput.value.toLowerCase();
   rootElem.innerHTML = "";
 
-  if (allEpisodes.length) {
-    const filteredEpisodes = allEpisodes.filter(
-      (episode) =>
-        episode.name.toLowerCase().includes(searchTerm) ||
-        (episode.summary && episode.summary.toLowerCase().includes(searchTerm))
-    );
-    render(filteredEpisodes);
-    makePageForEpisodes(filteredEpisodes);
-  } else {
-    const filteredShows = shows.filter(
-      (show) =>
-        show.name.toLowerCase().includes(searchTerm) ||
-        (show.summary && show.summary.toLowerCase().includes(searchTerm)) ||
-        show.genres.join(", ").toLowerCase().includes(searchTerm)
-    );
-    RenderShowsDropDown(filteredShows);
-    renderAllShows(filteredShows);
-  }
+  const filteredShows = allShows.filter(
+    (show) =>
+      show.name.toLowerCase().includes(searchTerm) ||
+      (show.summary && show.summary.toLowerCase().includes(searchTerm)) ||
+      show.genres.join(", ").toLowerCase().includes(searchTerm)
+  );
+
+  // Update the shows dropdown, shows list, rating and genre dropdowns
+  RenderShowsDropDown(filteredShows);
+  renderAllShows(filteredShows);
+  renderRatingDropdown(filteredShows);
+  renderGenreDropdown(filteredShows);
 });
 
 // Setup function to render episodes and dropdown
