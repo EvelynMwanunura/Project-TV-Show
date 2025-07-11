@@ -1,9 +1,10 @@
 // DOM Elements
 const rootElem = document.getElementById("root");
-let ulElement = document.createElement("ul");
-let searchInput = document.getElementById("search");
+const searchInput = document.getElementById("search");
 const dropDown = document.getElementById("select");
 const showsDropdown = document.getElementById("otherShowsSelect");
+
+const ulElement = document.createElement("ul");
 ulElement.style.listStyle = "none";
 
 // Global Variables
@@ -11,67 +12,48 @@ let allEpisodes = [];
 let allShows = [];
 let shows = [];
 
-// Function to fetch data from the API
+// Fetch Shows
 const fetchShows = async () => {
   try {
     const response = await fetch("https://api.tvmaze.com/shows");
-    if (!response.ok) {
-      throw new Error("Failed to fetch shows");
-    }
+    if (!response.ok) throw new Error("Failed to fetch shows");
     allShows = await response.json();
-
     return allShows;
   } catch (err) {
-    renderError(err);
+    renderError(err.message);
     return [];
   }
 };
 
-// Self-invoking function to fetch and render shows
-(async () => {
-  const showsArray = await fetchShows();
-  shows = showsArray; // Add this line
-  RenderShowsDropDown(showsArray);
-  renderAllShows(showsArray);
-  renderRatingDropdown(showsArray);
-  renderGenreDropdown(showsArray);
-})();
-
-// this is just a function to show error
+// Render error message
 function renderError(errorMessage) {
-  rootElem.textContent = errorMessage;
+  rootElem.innerHTML = `<p style="color: red; font-weight: bold;">${errorMessage}</p>`;
 }
 
-// this is an async function to fetch episodes from the API
-async function fetchEpisodes() {
-  try {
-    rootElem.textContent = "Loading episodes...";
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
-    if (!response.ok) {
-      throw new Error("Failed to fetch episodes.");
-    }
-    allEpisodes = await response.json();
-    rootElem.textContent = "";
-    setup();
-  } catch (error) {
-    renderError("Error loading episodes. Please try again later.");
-  }
-}
-// function to render all shows
-function renderAllShows(show) {
+// Initial Page Load
+document.addEventListener("DOMContentLoaded", async () => {
+  shows = await fetchShows();
+  renderAllShows(shows);
+  RenderShowsDropDown(shows);
+  renderRatingDropdown(shows);
+  renderGenreDropdown(shows);
+});
+
+// Render All Shows
+function renderAllShows(showList) {
   rootElem.innerHTML = "";
 
-  // Code to show how many shows are showing
   const showCount = document.createElement("p");
-  showCount.textContent = `Got ${show.length} show(s)`;
+  showCount.textContent = `Got ${showList.length} show(s)`;
   showCount.style.padding = "10px";
   showCount.style.color = "white";
   showCount.style.fontWeight = "bold";
   rootElem.appendChild(showCount);
-  let showsList = document.createElement("div");
+
+  const showsList = document.createElement("div");
   showsList.classList.add("showListContainer");
 
-  show.forEach((show) => {
+  showList.forEach((show) => {
     const showCard = document.createElement("div");
     showCard.classList.add("showCard");
 
@@ -90,8 +72,8 @@ function renderAllShows(show) {
         </div>
       </div>
     `;
-    const showMoreBtn = showCard.querySelector(".showMoreBtn");
-    showMoreBtn.addEventListener("click", () => {
+
+    showCard.querySelector(".showMoreBtn").addEventListener("click", () => {
       localStorage.setItem("selectedShow", JSON.stringify(show));
       window.location.href = "details.html";
     });
@@ -102,145 +84,139 @@ function renderAllShows(show) {
   rootElem.appendChild(showsList);
 }
 
-// Rendering Shows in dropdown
+// Render Shows Dropdown
 function RenderShowsDropDown(shows) {
-  shows.sort((a, b) => a.name.localeCompare(b.name));
   showsDropdown.innerHTML = "";
-  let defaultOption = document.createElement("option");
+
+  const defaultOption = document.createElement("option");
   defaultOption.value = "Available Shows";
   defaultOption.textContent = "Available Shows";
   showsDropdown.appendChild(defaultOption);
-  shows.forEach((show) => {
-    let dropDownOption = document.createElement("option");
-    let showName = `${show.name}`;
-    let showId = `${show.id}`;
-    dropDownOption.value = `${showId}`;
-    dropDownOption.textContent = `${showName}`;
-    showsDropdown.appendChild(dropDownOption);
-  });
+
+  shows
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .forEach((show) => {
+      const option = document.createElement("option");
+      option.value = show.id;
+      option.textContent = show.name;
+      showsDropdown.appendChild(option);
+    });
 }
 
-// Function to render episodes
-function render(episodes) {
-  ulElement.innerHTML = "";
-  episodes.forEach((episode) => {
-    let seasonNumber = episode.season.toString().padStart(2, "0");
-    let episodeNumber = episode.number.toString().padStart(2, "0");
-    let liElement = document.createElement("li");
-    liElement.innerHTML = `
-      <h3>${episode.name} - S${seasonNumber}E${episodeNumber}</h3> 
-      <img src="${episode.image.medium}" alt="episode Image"> 
-      <p>${episode.summary}</p>`;
-    ulElement.appendChild(liElement);
-  });
+// Fetch and render episodes
+async function fetchEpisodes(showId) {
+  try {
+    const response = await fetch(
+      `https://api.tvmaze.com/shows/${showId}/episodes`
+    );
+    if (!response.ok) throw new Error("Failed to fetch episodes.");
+    allEpisodes = await response.json();
+    setup();
+    dropDown.style.display = "inline-block";
+  } catch (error) {
+    renderError("Error loading episodes. Please try again later.");
+  }
 }
 
-// Rendering episodes dropdown
-function renderDropDown(episodes) {
-  dropDown.innerHTML = "";
-  let allEpisodesOption = document.createElement("option");
-  allEpisodesOption.value = "All Episodes";
-  allEpisodesOption.textContent = "All Episodes";
-  allEpisodesOption.selected = true;
-  dropDown.appendChild(allEpisodesOption);
-  episodes.forEach((episode) => {
-    let dropDownOption = document.createElement("option");
-    let seasonNumber = episode.season.toString().padStart(2, "0");
-    let episodeNumber = episode.number.toString().padStart(2, "0");
-    dropDownOption.value = `${episode.name} - S${seasonNumber}E${episodeNumber}`;
-    dropDownOption.textContent = `${episode.name} - S${seasonNumber}E${episodeNumber}`;
-    dropDown.appendChild(dropDownOption);
-  });
-}
-// Search Input Event Listener, if the page is showing episodes then it will search episodes else it will search shows matching the search term
-searchInput.addEventListener("input", function () {
-  const searchTerm = searchInput.value.toLowerCase();
-  rootElem.innerHTML = "";
-
-  const filteredShows = allShows.filter(
-    (show) =>
-      show.name.toLowerCase().includes(searchTerm) ||
-      (show.summary && show.summary.toLowerCase().includes(searchTerm)) ||
-      show.genres.join(", ").toLowerCase().includes(searchTerm)
-  );
-
-  // Update the shows dropdown, shows list, rating and genre dropdowns
-  RenderShowsDropDown(filteredShows);
-  renderAllShows(filteredShows);
-  renderRatingDropdown(filteredShows);
-  renderGenreDropdown(filteredShows);
-});
-
-// Setup function to render episodes and dropdown
+// Setup rendering for episodes
 function setup() {
-  //conditional statement, that if there is no episodes it should default to all shows
   if (!allEpisodes.length) {
     renderAllShows(allShows);
     return;
   }
+
+  render(allEpisodes);
+  renderDropDown(allEpisodes);
   makePageForEpisodes(allEpisodes);
 
-  //episode dropdown event listener
-
-  dropDown.addEventListener("change", function () {
-    const selectedEpisodeName = dropDown.value;
-    if (selectedEpisodeName === "All Episodes") {
+  dropDown.addEventListener("change", () => {
+    const selected = dropDown.value;
+    if (selected === "All Episodes") {
       render(allEpisodes);
       makePageForEpisodes(allEpisodes);
     } else {
-      const selectedEpisode = allEpisodes.find(
-        (episode) =>
-          `${episode.name} - S${episode.season
-            .toString()
-            .padStart(2, "0")}E${episode.number
-            .toString()
-            .padStart(2, "0")}` === selectedEpisodeName
-      );
-      if (selectedEpisode) {
-        render([selectedEpisode]);
-        makePageForEpisodes([selectedEpisode]);
+      const episode = allEpisodes.find((ep) => {
+        const season = ep.season.toString().padStart(2, "0");
+        const number = ep.number.toString().padStart(2, "0");
+        return `${ep.name} - S${season}E${number}` === selected;
+      });
+      if (episode) {
+        render([episode]);
+        makePageForEpisodes([episode]);
       }
     }
   });
-  render(allEpisodes);
-  renderDropDown(allEpisodes);
 }
 
-// Function  to count episodes showing
-function makePageForEpisodes(episodeList) {
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
-  rootElem.style.padding = "10px";
-  rootElem.style.color = "white";
+// Render episodes list
+function render(episodes) {
+  ulElement.innerHTML = "";
+  episodes.forEach((ep) => {
+    const season = ep.season.toString().padStart(2, "0");
+    const number = ep.number.toString().padStart(2, "0");
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <h3>${ep.name} - S${season}E${number}</h3>
+      <img src="${ep.image?.medium || ""}" alt="Episode Image" />
+      <p>${ep.summary}</p>`;
+    ulElement.appendChild(li);
+  });
+}
+
+// Render episode dropdown
+function renderDropDown(episodes) {
+  dropDown.innerHTML = "";
+  const allOption = document.createElement("option");
+  allOption.value = "All Episodes";
+  allOption.textContent = "All Episodes";
+  allOption.selected = true;
+  dropDown.appendChild(allOption);
+
+  episodes.forEach((ep) => {
+    const season = ep.season.toString().padStart(2, "0");
+    const number = ep.number.toString().padStart(2, "0");
+    const option = document.createElement("option");
+    option.value = `${ep.name} - S${season}E${number}`;
+    option.textContent = option.value;
+    dropDown.appendChild(option);
+  });
+}
+
+// Update episode count
+function makePageForEpisodes(list) {
+  rootElem.innerHTML = `<p style="padding: 10px; color: white;">Got ${list.length} episode(s)</p>`;
   rootElem.appendChild(ulElement);
 }
 
-// Event Listener for Shows Dropdown
-showsDropdown.addEventListener("change", async () => {
-  let selectedShowId = showsDropdown.value;
-  if (selectedShowId === "Available Shows") {
+// Filter with search
+searchInput.addEventListener("input", () => {
+  const term = searchInput.value.toLowerCase();
+  const filtered = allShows.filter(
+    (show) =>
+      show.name.toLowerCase().includes(term) ||
+      (show.summary && show.summary.toLowerCase().includes(term)) ||
+      show.genres.join(", ").toLowerCase().includes(term)
+  );
+
+  RenderShowsDropDown(filtered);
+  renderAllShows(filtered);
+  renderRatingDropdown(filtered);
+  renderGenreDropdown(filtered);
+});
+
+// Handle show dropdown
+showsDropdown.addEventListener("change", () => {
+  const selectedId = showsDropdown.value;
+  if (selectedId === "Available Shows") {
     allEpisodes = [];
-    rootElem.textContent = "";
     renderAllShows(allShows);
     dropDown.style.display = "none";
-    return;
-  }
-  try {
-    const response = await fetch(
-      `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch episodes");
-    }
-    const episodes = await response.json();
-    rootElem.textContent = "";
-    allEpisodes = episodes;
-    setup();
-    dropDown.style.display = "inline-block";
-  } catch (error) {
-    renderError(error);
+  } else {
+    fetchEpisodes(selectedId);
   }
 });
 
+// Rating filter
 function renderRatingDropdown(shows) {
   const ratingDropdown = document.getElementById("rating");
   ratingDropdown.innerHTML = "";
@@ -250,15 +226,9 @@ function renderRatingDropdown(shows) {
   defaultOption.textContent = "Rating";
   ratingDropdown.appendChild(defaultOption);
 
-  // Get unique ratings and sort them
   const uniqueRatings = [
-    ...new Set(
-      shows
-        .map((show) => show.rating.average)
-        .filter((rating) => rating !== null)
-        .sort((a, b) => b - a)
-    ),
-  ];
+    ...new Set(shows.map((s) => s.rating.average).filter(Boolean)),
+  ].sort((a, b) => b - a);
 
   uniqueRatings.forEach((rating) => {
     const option = document.createElement("option");
@@ -267,16 +237,12 @@ function renderRatingDropdown(shows) {
     ratingDropdown.appendChild(option);
   });
 
-  // Event listener for dropdown filter
   ratingDropdown.addEventListener("change", () => {
     const selectedRating = parseFloat(ratingDropdown.value);
-
     if (!selectedRating) {
-      renderAllShows(shows); // Reset to show all
+      renderAllShows(shows);
     } else {
-      const filtered = shows.filter(
-        (show) => show.rating.average === selectedRating
-      );
+      const filtered = shows.filter((s) => s.rating.average === selectedRating);
       renderAllShows(filtered);
       renderGenreDropdown(filtered);
       renderDropDown(filtered);
@@ -284,23 +250,19 @@ function renderRatingDropdown(shows) {
   });
 }
 
-//Filter by Genre
-
+// Genre filter
 function renderGenreDropdown(shows) {
   const genreDropdown = document.getElementById("genre");
   genreDropdown.innerHTML = "";
 
-  // Create default option
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "Genre";
   genreDropdown.appendChild(defaultOption);
 
-  // Collect all genres into a single array
-  const allGenres = shows.flatMap((show) => show.genres || []);
+  const allGenres = shows.flatMap((s) => s.genres || []);
   const uniqueGenres = [...new Set(allGenres)].sort();
 
-  // Populate dropdown with unique genres
   uniqueGenres.forEach((genre) => {
     const option = document.createElement("option");
     option.value = genre;
@@ -308,28 +270,27 @@ function renderGenreDropdown(shows) {
     genreDropdown.appendChild(option);
   });
 
-  // Event listener to filter shows by selected genre
   genreDropdown.addEventListener("change", () => {
     const selectedGenre = genreDropdown.value;
-
     if (!selectedGenre) {
-      renderAllShows(shows); // Show all if no genre selected
+      renderAllShows(shows);
     } else {
-      const filteredShows = shows.filter((show) =>
-        show.genres.includes(selectedGenre)
-      );
-      renderAllShows(filteredShows);
-      renderDropDown(filteredShows);
-      renderRatingDropdown(filteredShows);
+      const filtered = shows.filter((s) => s.genres.includes(selectedGenre));
+      renderAllShows(filtered);
+      renderDropDown(filtered);
+      renderRatingDropdown(filtered);
     }
   });
 }
+
+// Details page load
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("detailsContainer");
-  const showData = localStorage.getItem("selectedShow");
+  if (!container) return;
 
+  const showData = localStorage.getItem("selectedShow");
   if (!showData) {
-    window.location.href = "index.html"; // auto-redirect if no data
+    window.location.href = "index.html";
     return;
   }
 
