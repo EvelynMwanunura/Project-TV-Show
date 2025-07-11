@@ -366,6 +366,3 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   `;
 });
-
-// Window onload setup
-window.onload = setup;
